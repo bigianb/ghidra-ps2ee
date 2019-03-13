@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Utility">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Framework/Utility/lib/Utility.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

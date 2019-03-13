@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_definitions>
+  <language processor="PS2EE"
+            endian="little"
+            size="32"
+            variant="EmotionEngine"
+            version="1.5"
+            slafile="ps2_ee.sla"
+            processorspec="ps2EE.pspec"
+            id="PS2EE:LE:32:EE">
+    <description>PS2 Emotion Engine</description>
+    <compiler name="default" spec="ps2ee.cspec" id="default"/>
+  </language>
+</language_definitions>

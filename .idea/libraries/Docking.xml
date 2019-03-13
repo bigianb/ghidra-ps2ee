@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Docking">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Framework/Docking/lib/Docking.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

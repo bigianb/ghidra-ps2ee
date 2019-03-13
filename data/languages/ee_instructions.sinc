@@ -1,0 +1,72 @@
+
+############################
+#
+# EE Instructions
+#
+############################
+
+# 0000 0000 000t tttt dddd daaa aa11 1000
+:dsll RD, RTsrc, sa             is prime=0 & fct=56 & rs=0 & RTsrc & RD & sa {
+    RD = RTsrc << sa;
+}
+# 0000 0000 000t tttt dddd daaa aa11 1100
+:dsll32 RD, RTsrc, sa           is prime=0 & fct=60 & rs=0 & RTsrc & RD & sa {
+    RD = RTsrc << (sa + 32);
+}
+# 0000 00ss ssst tttt dddd d000 0001 0100
+:dsllv RD, RTsrc, RSsrc         is prime=0 & fct=20 & RSsrc & RTsrc & RD & sa=0 {
+    RD = RTsrc << RSsrc;
+}
+# 0000 0000 000t tttt dddd daaa aa11 1011
+:dsra RD, RTsrc, sa             is prime=0 & fct=59 & rs=0 & RTsrc & RD & sa {
+    RD = RTsrc s>> sa;
+}
+# 0000 0000 000t tttt dddd daaa aa11 1111
+:dsra32 RD, RTsrc, sa           is prime=0 & fct=63 & rs=0 & RTsrc & RD & sa {
+    RD = RTsrc s>> (sa + 32);
+}
+# 0000 00ss ssst tttt dddd d000 0001 0111
+:dsrav RD, RTsrc, RSsrc         is prime=0 & fct=23 & RSsrc & RTsrc & RD & sa=0 {
+    RD = RTsrc s>> RSsrc;
+}
+# 0000 0000 000t tttt dddd daaa aa11 1010
+:dsrl RD, RTsrc, sa             is prime=0 & fct=58 & rs=0 & RTsrc & RD & sa {
+    RD = RTsrc >> sa;
+}
+# 0000 0000 000t tttt dddd daaa aa11 1110
+:dsrl32 RD, RTsrc, sa           is prime=0 & fct=62 & rs=0 & RTsrc & RD & sa {
+    RD = RTsrc >> (sa + 32);
+}
+# 0000 00ss ssst tttt dddd d000 0101 0110
+:dsrlv RD, RTsrc, RSsrc         is prime=0 & fct=22 & RSsrc & RTsrc & RD & sa=0 {
+    RD = RTsrc >> RSsrc;
+}
+
+# 0000 00ss ssst tttt dddd d000 0010 1110
+:dsub RD, RSsrc, RTsrc          is prime=0 & fct=46 & RSsrc & RTsrc & RD & sa=0 {
+    RD = RSsrc - RTsrc;
+}
+# 0000 00ss ssst tttt dddd d000 0010 1111
+:dsubu RD, RSsrc, RTsrc         is prime=0 & fct=47 & RSsrc & RTsrc & RD & sa=0 {
+    RD = RSsrc - RTsrc;
+}
+
+# 1101 11bb bbbt tttt iiii iiii iiii iiii
+:ld RT, OFF_BASE                is prime=55 & OFF_BASE & RT {        
+    RT = *[ram]:8 OFF_BASE;    
+}
+
+# 1111 11bb bbbt tttt iiii iiii iiii iiii
+:sd RTsrc, OFF_BASE             is prime=63 & OFF_BASE & RTsrc {
+    *[ram]:8 OFF_BASE = RTsrc;
+}
+
+# 0111 10bb bbbt tttt iiii iiii iiii iiii
+:lq RT, OFF_BASE                is prime=30 & OFF_BASE & RT {        
+    RT = *[ram]:16 OFF_BASE;    
+}
+
+# 0111 11bb bbbt tttt iiii iiii iiii iiii
+:sq RTsrc, OFF_BASE             is prime=31 & OFF_BASE & RTsrc {
+    *[ram]:16 OFF_BASE = RTsrc;
+}
