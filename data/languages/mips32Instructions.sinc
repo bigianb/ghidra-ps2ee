@@ -84,12 +84,12 @@
 }
 
 # 1011 11bb bbbo oooo iiii iiii iiii iiii
-:cache op, OFF_BASER6           is ((prime=47 & REL6=0) | (prime=0x1E & REL6=1 & fct=0x25 & bit6=0)) & OFF_BASER6 & op {  
-    cacheOp(op:1, OFF_BASER6); 
+:cache op, OFF_BASE           is ((prime=47 & REL6=0) | (prime=0x1E & REL6=1 & fct=0x25 & bit6=0)) & OFF_BASE & op {  
+    cacheOp(op:1, OFF_BASE); 
 }
 
-:cachee op, OFF_BASER6           is prime=0x1E & fct=0x1B & bit6=0 & OFF_BASER6 & op {
-    cacheOp(op:1, OFF_BASER6); 
+:cachee op, OFF_BASE          is prime=0x1E & fct=0x1B & bit6=0 & OFF_BASE & op {
+    cacheOp(op:1, OFF_BASE); 
 }
 
 :cfc0 RT, RD0                is prime=16 & copop=2 & RT & RD0 & bigfunct=0 {
@@ -279,17 +279,9 @@ define pcodeop special2;
     RT = sext(*[ram]:1 OFF_BASE);  
 }
 
-:lbe RT, OFF_BASER6           	is prime=0x1E & fct=0x2C & bit6=0 & OFF_BASER6 & RT {
-    RT = sext(*[ram]:1 OFF_BASER6);  
-}
-
 # 1001 00bb bbbt tttt iiii iiii iiii iiii
 :lbu RT, OFF_BASE               is prime=36 & OFF_BASE & RT {      
     RT = zext( *[ram]:1 OFF_BASE );
-}
-
-:lbue RT, OFF_BASER6           	is prime=0x1E & fct=0x28 & bit6=0 & OFF_BASER6 & RT {
-    RT = zext( *[ram]:1 OFF_BASER6 );
 }
 
 # 1000 01bb bbbt tttt iiii iiii iiii iiii
@@ -297,30 +289,14 @@ define pcodeop special2;
     RT = sext( *[ram]:2 OFF_BASE );
 }
 
-:lhe RT, OFF_BASER6           	is prime=0x1E & fct=0x2D & bit6=0 & OFF_BASER6 & RT {
-    RT = sext( *[ram]:2 OFF_BASER6 );
-}
-
 # 1001 01bb bbbt tttt iiii iiii iiii iiii
 :lhu RT, OFF_BASE               is prime=37 & OFF_BASE & RT { 
     RT =  zext( *[ram]:2 OFF_BASE ); 
 }
 
-:lhue RT, OFF_BASER6           	is prime=0x1E & fct=0x29 & bit6=0 & OFF_BASER6 & RT {
-    RT =  zext( *[ram]:2 OFF_BASER6 ); 
-}
-
-:lle RT, OFF_BASER6           	is prime=0x1E & fct=0x2E & bit6=0 & OFF_BASER6 & RT {
-    RT = sext(*[ram]:4 OFF_BASER6);
-}
-
 # 1000 11bb bbbt tttt iiii iiii iiii iiii
 :lw RT, OFF_BASE                is prime=35 & OFF_BASE & RT {
     RT = sext( *[ram]:4 OFF_BASE );
-}
-
-:lwe RT, OFF_BASER6           	is prime=0x1E & fct=0x2F & bit6=0 & OFF_BASER6 & RT {
-    RT = sext( *[ram]:4 OFF_BASER6 );
 }
 
 # 0100 0000 000t tttt dddd d000 0000 0sss
@@ -406,11 +382,7 @@ define pcodeop special2;
 
 :pref hint, OFF_BASE            is prime=51 & hint & OFF_BASE {
     prefetch(OFF_BASE, hint:1); 
-}
-
-:prefe hint, OFF_BASER6         is prime=0x1E & fct=0x23 & bit6=0 & OFF_BASER6 & hint {
-    prefetch(OFF_BASER6, hint:1); 
-}        
+}   
 
 # 0111 1100 000t tttt dddd d000 0011 1011
 :rdhwr RT, RDsrc                is prime=31 & rs=0 & fct2=0 & fct=59 & RT & RDsrc {
@@ -447,15 +419,6 @@ define pcodeop special2;
     *[ram]:1 OFF_BASE = RTsrc:1;
 }
 
-:sbe RTsrc, OFF_BASER6          is prime=0x1E & fct=0x1C & bit6=0 & OFF_BASER6 & RTsrc {
-    *[ram]:1 OFF_BASER6 = RTsrc:1;
-}
-
-:sce RTsrc, OFF_BASER6          is prime=0x1E & fct=0x1E & bit6=0 & OFF_BASER6 & RTsrc {
-    *[ram]:4 OFF_BASER6 = RTsrc:$(SIZETO4);
-    RTsrc = 1;
-}
-
 # 0111 00cc cccc cccc cccc cccc cc11 1111
 :sdbbp breakcode                is prime=28 & fct=63 & breakcode {
     signalDebugBreakpointException();
@@ -479,10 +442,6 @@ define pcodeop special2;
 # 1010 01bb bbbt tttt iiii iiii iiii iiii
 :sh RTsrc, OFF_BASE             is prime=41 & OFF_BASE & RTsrc { 
     *[ram]:2 OFF_BASE = RTsrc:2;  
-}
-
-:she RTsrc, OFF_BASER6          is prime=0x1E & fct=0x1D & bit6=0 & OFF_BASER6 & RTsrc {
-    *[ram]:2 OFF_BASER6 = RTsrc:2;  
 }
 
 # 0000 0000 000t tttt dddd daaa aa00 0000
@@ -579,10 +538,6 @@ define pcodeop special2;
     *[ram]:4 OFF_BASE = tmp; 
 }
 @endif
-
-:swe RTsrc, OFF_BASER6          is prime=0x1E & fct=0x1F & bit6=0 & OFF_BASER6 & RTsrc {
-    *[ram]:4 OFF_BASER6 = RTsrc:$(SIZETO4);    
-}
 
 define pcodeop SYNC;
 
@@ -732,9 +687,7 @@ define pcodeop SYNC;
 # 0010 00ss ssst tttt iiii iiii iiii iiii
 :addi RT32, RS32src, simmed         is prime=8 & RT32 & RS32src & simmed & RT { 
     RT32 = RS32src + simmed;
-@ifdef MIPS64
     RT = sext(RT32);
-@endif
 }
 
 # 0000 01ss sss1 0001 iiii iiii iiii iiii
@@ -937,21 +890,6 @@ define pcodeop SYNC;
     valLoad:4 = *(addr) >> (shft * 8);
     RT = sext( valOrig | valLoad );
 }
-:lwle RTsrc, OFF_BASER6         is prime=0x1E & fct=0x19 & bit6=0 & OFF_BASER6 & RTsrc & RT {
-    shft:$(ADDRSIZE) = OFF_BASER6 & 0x3; 
-    addr:$(ADDRSIZE) = OFF_BASER6 - shft; 
-    valOrig:4 = RTsrc:$(SIZETO4) & (0xffffffff >> ((shft+1)* 8));
-    valLoad:4 = *(addr) << ((3-shft) * 8);     
-    RT = sext( valLoad | valOrig );            
-}
-
-:lwre RTsrc, OFF_BASER6         is prime=0x1E & fct=0x1A & bit6=0 & OFF_BASER6 & RTsrc & RT {
-    shft:$(ADDRSIZE) = OFF_BASER6 & 0x3; 
-    addr:$(ADDRSIZE) = OFF_BASER6 - shft; 
-    valOrig:4 = RTsrc:$(SIZETO4) & (0xffffffff << ((4-shft)* 8));
-    valLoad:4 = *(addr) >> (shft * 8);
-    RT = sext( valOrig | valLoad );
-}
 
 # lwl and lwr almost always come in pairs. 
 # When the analyzer does finds a matching lwl/lwr pair, the pcode is simplified so that 
@@ -1104,22 +1042,6 @@ define pcodeop SYNC;
     tmpRT:4 = RTsrc:$(SIZETO4);
     shft:$(ADDRSIZE) = OFF_BASE & 0x3;      
     addr:$(ADDRSIZE) = OFF_BASE - shft; 
-    valOrig:4 = *(addr) & (0xffffffff >> ((4-shft) * 8));
-    valStore:4 = tmpRT << (shft*8);
-    *(addr) = valOrig | valStore;
-}
-:swle RTsrc, OFF_BASER6         is prime=0x1E & fct=0x21 & bit6=0 & OFF_BASER6 & RTsrc & RT {
-    tmpRT:4 = RTsrc:$(SIZETO4);  
-    shft:$(ADDRSIZE) = OFF_BASER6 & 0x3; 
-    addr:$(ADDRSIZE) = OFF_BASER6 - shft; 
-    valOrig:4 = *(addr) & (0xffffffff << ((shft+1) * 8));
-    valStore:4 = tmpRT >> ((3-shft) * 8);
-    *(addr) = valOrig | valStore; 
-}
-:swre RTsrc, OFF_BASER6         is prime=0x1E & fct=0x22 & bit6=0 & OFF_BASER6 & RTsrc & RT {
-    tmpRT:4 = RTsrc:$(SIZETO4);
-    shft:$(ADDRSIZE) = OFF_BASER6 & 0x3;      
-    addr:$(ADDRSIZE) = OFF_BASER6 - shft; 
     valOrig:4 = *(addr) & (0xffffffff >> ((4-shft) * 8));
     valStore:4 = tmpRT << (shft*8);
     *(addr) = valOrig | valStore;

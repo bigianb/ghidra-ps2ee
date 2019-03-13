@@ -56,8 +56,64 @@
     RT = *[ram]:8 OFF_BASE;    
 }
 
+# 0110 10bb bbbt tttt iiii iiii iiii iiii
+:ldl RT, OFF_BASE               is prime=26 & OFF_BASE & RT {        
+    shft:$(ADDRSIZE) = OFF_BASE & 0x7; 
+    addr:$(ADDRSIZE) = OFF_BASE - shft; 
+    valOrig:8 = RT & (0xffffffffffffffff >> ((shft+1) * 8));
+    valLoad:8 = *(addr) << ((7-shft) * 8);     
+    RT = valLoad | valOrig;
+}
+# 0110 11bb bbbt tttt iiii iiii iiii iiii
+:ldr RT, OFF_BASE               is prime=27 & OFF_BASE & RT {
+    # no-op
+    # see ldl instruction  
+    
+    shft:$(ADDRSIZE) = OFF_BASE & 0x7; 
+    addr:$(ADDRSIZE) = OFF_BASE - shft; 
+    valOrig:8 = RT & (0xffffffffffffffff << ((8-shft) * 8));
+    valLoad:8 = *(addr) >> (shft * 8);
+    RT = valOrig | valLoad;
+}
+
+# ldl and ldr almost always come in pairs. 
+# When the analyzer does finds a matching ldl/ldr pair, the pcode is simplified so that 
+# ldl does all the loading while ldr is a no-op
+
+:ldl RT, OFF_BASE               is prime=26 & OFF_BASE & RT & PAIR_INSTRUCTION_FLAG=1 [ PAIR_INSTRUCTION_FLAG = 1; globalset(inst_next, PAIR_INSTRUCTION_FLAG);] {        
+}    
+:ldr RT, OFF_BASE               is prime=27 & OFF_BASE & RT & PAIR_INSTRUCTION_FLAG=1 [ PAIR_INSTRUCTION_FLAG = 0; ] {
+    RT = *[ram]:8 OFF_BASE;
+}
+
+
 # 1111 11bb bbbt tttt iiii iiii iiii iiii
 :sd RTsrc, OFF_BASE             is prime=63 & OFF_BASE & RTsrc {
+    *[ram]:8 OFF_BASE = RTsrc;
+}
+
+# 1011 00bb bbbt tttt iiii iiii iiii iiii
+:sdl RTsrc, OFF_BASE            is prime=44 & OFF_BASE & RTsrc {        
+    shft:$(ADDRSIZE) = OFF_BASE & 0x7; 
+    addr:$(ADDRSIZE) = OFF_BASE - shft; 
+    valOrig:8 = *(addr) & (0xffffffffffffffff << ((shft+1) * 8));
+    valStore:8 = RTsrc >> ((7-shft) * 8);
+    *(addr) = valOrig | valStore;    
+}
+# 1011 01bb bbbt tttt iiii iiii iiii iiii
+:sdr RTsrc, OFF_BASE            is prime=45 & OFF_BASE & RTsrc {
+    shft:$(ADDRSIZE) = OFF_BASE & 0x7;      
+    addr:$(ADDRSIZE) = OFF_BASE - shft; 
+    valOrig:8 = *(addr) & (0xffffffffffffffff >> ((8-shft) * 8));
+    valStore:8 = RTsrc << (shft*8);
+    *(addr) = valStore | valOrig;
+}
+
+# When the analyzer finds a matching sdl/sdr pair, the pcode is simplified so that 
+# sdl does all the storing while sdr is a no-op
+:sdl RTsrc, OFF_BASE            is prime=44 & OFF_BASE & RTsrc & PAIR_INSTRUCTION_FLAG=1 [ PAIR_INSTRUCTION_FLAG = 1; globalset(inst_next, PAIR_INSTRUCTION_FLAG);] {        
+}
+:sdr RTsrc, OFF_BASE            is prime=45 & OFF_BASE & RTsrc & PAIR_INSTRUCTION_FLAG=1 [ PAIR_INSTRUCTION_FLAG = 0; ] {
     *[ram]:8 OFF_BASE = RTsrc;
 }
 

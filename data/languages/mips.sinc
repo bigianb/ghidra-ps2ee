@@ -17,7 +17,7 @@
 #-----
 
 @define REGSIZE "8"     # General purpose register size 
-@define FREGSIZE "8"    # Floating point register size 
+@define FREGSIZE "4"    # Floating point register size 
 @define ADDRSIZE "4"    # Memory address size (8 or 4, virtual and physical)
 @define SIZETO4  "4"   # In 32-bit mode, no truncation needed
 @define ADDRCAST ":4"   # need to down cast to pointer size
@@ -58,20 +58,11 @@ define register offset=0 size=4 [
 ];
 
 # Floating point registers
-# For 64-bit Double floating point operands need to bond two 32-bit FPRs
 define register offset=0x1000 size=4 [
     f1  f0  f3  f2  f5  f4  f7  f6
     f9  f8  f11 f10 f13 f12 f15 f14
     f17 f16 f19 f18 f21 f20 f23 f22
     f25 f24 f27 f26 f29 f28 f31 f30
-];
-
-# Note ftD, fsD, and fdD and frD have been added to support 64-bit double floats
-define register offset=0x1000 size=8 [
-    f0_1   f2_3   f4_5   f6_7
-    f8_9   f10_11 f12_13 f14_15
-    f16_17 f18_19 f20_21 f22_23
-    f24_25 f26_27 f28_29 f30_31
 ];
 
 # Floating point control registers
@@ -309,14 +300,6 @@ attach variables [ fs ft fd fr ] [
     f16 f17 f18 f19 f20 f21 f22 f23 f24 f25 f26 f27 f28 f29 f30 f31
 ];
 
-# For 64-bit floating point Double instruction operands need to bond two 32-bit FPRs
-attach variables [ fsD ftD fdD frD ] [
-    f0_1   _ f2_3   _ f4_5   _ f6_7   _
-    f8_9   _ f10_11 _ f12_13 _ f14_15 _
-    f16_17 _ f18_19 _ f20_21 _ f22_23 _
-    f24_25 _ f26_27 _ f28_29 _ f30_31 _
-];
-
 # Only a few Floating Point Control (FCR) registers are defined
 attach variables [ fs_fcr ] [
 	fir		_		_		_		_		_		_		_
@@ -473,9 +456,6 @@ macro ValCast(dest,src) {
 
 OFF_BASE: simmed(base)  is simmed & base    { tmp:$(REGSIZE) = base + simmed; tmpscaled:$(ADDRSIZE) = 0; ValCast(tmpscaled,tmp); export tmpscaled; }
 INDEX_BASE: index(base) is index & base     { tmp:$(REGSIZE) = base + index; tmpscaled:$(ADDRSIZE) = 0; ValCast(tmpscaled,tmp); export tmpscaled; }
-
-OFF_BASER6: simmed(base)	is REL6=0 & simmed & base	{ tmp:$(REGSIZE) = base + simmed; tmpscaled:$(ADDRSIZE) = 0; ValCast(tmpscaled,tmp); export tmpscaled; }
-OFF_BASER6: simmed9(base)	is REL6=1 & simmed9 & base	{ tmp:$(REGSIZE) = base + simmed9; tmpscaled:$(ADDRSIZE) = 0; ValCast(tmpscaled,tmp); export tmpscaled; }
 
 S18L3: val							is simmed18 [ val = simmed18 << 3; ] { export *[const]:4 val; }
 S19L2: val							is simmed19 [ val = simmed19 << 2; ] { export *[const]:4 val; }
