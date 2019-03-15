@@ -126,3 +126,8 @@
 :sq RTsrc, OFF_BASE             is prime=31 & OFF_BASE & RTsrc {
     *[ram]:16 OFF_BASE = RTsrc;
 }
+
+# 0000 01rr rrr1 1001 iiii iiii iiii iiii
+:mtsah rs, immed                is prime=1 & rt=25 {
+}
+
