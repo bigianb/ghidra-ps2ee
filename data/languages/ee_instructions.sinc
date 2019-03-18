@@ -136,3 +136,14 @@
 :adda.S fs, ft           is prime=17 & fct=0x18 & format=0x10 & fd=0 & ft & fs {
 
 }
+
+# 0000 00ss ssst tttt dddd d000 0001 1000
+:mult rd, RS32src, RT32src              is prime=0 & fct=24 & RS32src & RT32src & rd & sa=0 {
+    tmp1:8 = sext( RS32src );
+    tmp2:8 = sext( RT32src );
+    prod:8 = tmp1 * tmp2;
+    rd = prod;
+    lo = sext(prod:4);
+    prod = prod >> 32;
+    hi = sext(prod:4);
+}
