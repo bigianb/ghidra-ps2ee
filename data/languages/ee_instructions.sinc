@@ -147,3 +147,8 @@
     prod = prod >> 32;
     hi = sext(prod:4);
 }
+
+# 0100 0110 000t tttt 0000 0ddd dd00 0100
+:sqrt.S fd, ft              is prime=17 & format=0x10 & ft & fs=0 & fd & fct=4  {
+    fd = sqrt(ft);
+}

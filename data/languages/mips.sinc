@@ -18,30 +18,39 @@
 
 @define REGSIZE "8"     # General purpose register size 
 @define FREGSIZE "4"    # Floating point register size 
-@define ADDRSIZE "4"    # Memory address size (8 or 4, virtual and physical)
-@define SIZETO4  "4"   # In 32-bit mode, no truncation needed
-@define ADDRCAST ":4"   # need to down cast to pointer size
-@define NEEDCAST "1"
 
 #-----
 
 define endian=little;
 define alignment=2;
 
-define space ram type=ram_space size=$(ADDRSIZE) default;
+define space ram type=ram_space size=4 default;
 define space register type=register_space size=4;
 
 # General purpose registers
-define register offset=0 size=$(REGSIZE) [ 
-    zero at v0 v1 
-    a0 a1 a2 a3 
-    t0 t1 t2 t3 
-    t4 t5 t6 t7 
-    s0 s1 s2 s3 
-    s4 s5 s6 s7 
-    t8 t9 k0 k1 
-    gp sp s8 ra
-    pc
+define register offset=0 size=16 [
+    zero_qw at_qw v0_qw v1_qw
+    a0_qw a1_qw a2_qw a3_qw
+    t0_qw t1_qw t2_qw t3_qw
+    t4_qw t5_qw t6_qw t7_qw
+    s0_qw s1_qw s2_qw s3_qw
+    s4_qw s5_qw s6_qw s7_qw
+    t8_qw t9_qw k0_qw k1_qw
+    gp_qw sp_qw s8_qw ra_qw
+    pc_qw
+];
+
+#64 bit representation of the 128 bit registers
+define register offset=0 size=8 [
+    zero _ at _ v0 _ v1 _
+    a0 _ a1 _ a2 _ a3 _
+    t0 _ t1 _ t2 _ t3 _
+    t4 _ t5 _ t6 _ t7 _
+    s0 _ s1 _ s2 _ s3 _
+    s4 _ s5 _ s6 _ s7 _
+    t8 _ t9 _ k0 _ k1 _
+    gp _ sp _ s8 _ ra _
+    pc _
 ];
 
 # We need the 32-bit pieces of the main registers for the 32-bit instructions

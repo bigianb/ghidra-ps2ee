@@ -22,10 +22,10 @@
   <default_proto>
     <prototype name="__stdcall" extrapop="0" stackshift="0">
       <input>
-        <pentry minsize="1" maxsize="4" metatype="float">
+        <pentry minsize="4" maxsize="4" metatype="float">
           <register name="f12"/>
         </pentry>
-        <pentry minsize="1" maxsize="4" metatype="float">
+        <pentry minsize="4" maxsize="4" metatype="float">
           <register name="f13"/>
         </pentry>
         <pentry minsize="1" maxsize="4">
@@ -45,14 +45,11 @@
         </pentry>
       </input>
       <output>
-        <pentry minsize="1" maxsize="4" metatype="float">
+        <pentry minsize="4" maxsize="4" metatype="float">
           <register name="f0"/>
         </pentry>
         <pentry minsize="1" maxsize="4">
           <register name="v0"/>
-        </pentry>
-		<pentry minsize="5" maxsize="8">
-          <addr space="join" piece1="v0" piece2="v1"/>
         </pentry>
       </output>
       <unaffected>
